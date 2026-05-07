@@ -45,6 +45,30 @@ body {
   max-width: 22rem;
 }
 
+.conditions {
+  margin: 0.9rem 0 0;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid color-mix(in oklab, CanvasText 18%, transparent);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  max-width: 42rem;
+}
+
+.conditions legend {
+  padding: 0 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.conditions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+}
+
 .search-label {
   font-size: 0.8rem;
   font-weight: 600;
@@ -92,6 +116,10 @@ body {
 
 .speed-table tbody tr:nth-child(even) {
   background: color-mix(in oklab, CanvasText 4%, transparent);
+}
+
+.speed-table tbody tr.active-row {
+  background: color-mix(in oklab, dodgerblue 24%, transparent);
 }
 
 .speed-table td {
