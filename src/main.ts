@@ -1,6 +1,6 @@
 import { Generations, toID } from '@smogon/calc';
 
-import { championsSpeedRange } from './speed';
+import { applyConditionToRange, championsSpeedRange, type ChampionsSpeedRange, type SpeedCondition } from './speed';
 import './style.css';
 
 const SETDEX_URL = `${import.meta.env.BASE_URL}setdex_pikalytics_champions_v11.js`;
@@ -27,6 +27,10 @@ function baseSpeForSpecies(name: string): number | null {
 }
 
 type TierRow = { baseSpe: number; names: string[] };
+
+function formatRange(range: ChampionsSpeedRange): string {
+  return `${range.minNegativeNature} / ${range.minNeutralNature} / ${range.maxNeutralNature} / ${range.maxPositiveNature}`;
+}
 
 function buildTiers(speciesNames: string[]): { tiers: TierRow[]; unknown: string[] } {
   const unknown: string[] = [];
@@ -71,6 +75,14 @@ function render(): void {
         <span class="search-label">Filter by species name</span>
         <input id="species-filter" type="search" autocomplete="off" placeholder="e.g. Dragapult" />
       </label>
+      <fieldset class="conditions">
+        <legend>Speed condition for clicked row</legend>
+        <label><input type="radio" name="speed-condition" value="neutral" checked /> Neutral</label>
+        <label><input type="radio" name="speed-condition" value="choicescarf" /> Choice Scarf</label>
+        <label><input type="radio" name="speed-condition" value="tailwind" /> Tailwind</label>
+        <label><input type="radio" name="speed-condition" value="minus1" /> -1</label>
+        <label><input type="radio" name="speed-condition" value="minus2" /> -2</label>
+      </fieldset>
     </header>
     <div id="status" class="status" role="status"></div>
     <div class="table-wrap">
@@ -92,6 +104,18 @@ function render(): void {
   const tbody = root.querySelector<HTMLTableSectionElement>('#tier-body')!;
   const footer = root.querySelector<HTMLElement>('#footer-meta')!;
   const filterInput = root.querySelector<HTMLInputElement>('#species-filter')!;
+  const conditionRadios = root.querySelectorAll<HTMLInputElement>('input[name="speed-condition"]');
+  let selectedCondition: SpeedCondition = 'neutral';
+  let activeRow: HTMLTableRowElement | null = null;
+
+  const updateRangeCell = (row: HTMLTableRowElement, conditioned: boolean): void => {
+    const baseSpeText = row.dataset.baseSpe;
+    const rangeCell = row.querySelector<HTMLTableCellElement>('td.range');
+    if (!baseSpeText || !rangeCell) return;
+    const baseRange = championsSpeedRange(Number(baseSpeText));
+    const display = conditioned ? applyConditionToRange(baseRange, selectedCondition) : baseRange;
+    rangeCell.textContent = formatRange(display);
+  };
 
   statusEl.textContent = 'Loading setdex…';
 
@@ -109,15 +133,11 @@ function render(): void {
 
       for (const tier of tiers) {
         const tr = document.createElement('tr');
-        const {
-          minNegativeNature,
-          minNeutralNature,
-          maxNeutralNature,
-          maxPositiveNature,
-        } = championsSpeedRange(tier.baseSpe);
+        const baseRange = championsSpeedRange(tier.baseSpe);
         const namesCell = tier.names.join(', ');
 
         tr.dataset.searchBlob = tier.names.join(' ').toLowerCase();
+        tr.dataset.baseSpe = String(tier.baseSpe);
 
         const tdBase = document.createElement('td');
         tdBase.textContent = String(tier.baseSpe);
@@ -125,14 +145,22 @@ function render(): void {
 
         const tdRange = document.createElement('td');
         tdRange.className = 'num range';
-        tdRange.textContent =
-          `${minNegativeNature} / ${minNeutralNature} / ${maxNeutralNature} / ${maxPositiveNature}`;
+        tdRange.textContent = formatRange(baseRange);
 
         const tdNames = document.createElement('td');
         tdNames.className = 'names';
         tdNames.textContent = namesCell;
 
         tr.append(tdBase, tdRange, tdNames);
+        tr.addEventListener('click', () => {
+          if (activeRow && activeRow !== tr) {
+            activeRow.classList.remove('active-row');
+            updateRangeCell(activeRow, false);
+          }
+          activeRow = tr;
+          tr.classList.add('active-row');
+          updateRangeCell(tr, true);
+        });
         tbody.appendChild(tr);
       }
 
@@ -162,6 +190,15 @@ function render(): void {
       };
 
       filterInput.addEventListener('input', applyFilter);
+      for (const radio of conditionRadios) {
+        radio.addEventListener('change', () => {
+          if (!radio.checked) return;
+          selectedCondition = radio.value as SpeedCondition;
+          if (activeRow) {
+            updateRangeCell(activeRow, true);
+          }
+        });
+      }
     })
     .catch((err: unknown) => {
       console.error(err);
