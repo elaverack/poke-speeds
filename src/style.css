@@ -1,0 +1,128 @@
+:root {
+  color-scheme: light dark;
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    Noto Sans,
+    sans-serif;
+  line-height: 1.45;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 1rem 1.25rem 2rem;
+  background: Canvas;
+  color: CanvasText;
+}
+
+.page-header h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  font-weight: 650;
+}
+
+.sub {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  max-width: 42rem;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-width: 22rem;
+}
+
+.search-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+#species-filter {
+  padding: 0.45rem 0.55rem;
+  font: inherit;
+  border-radius: 6px;
+  border: 1px solid color-mix(in oklab, CanvasText 22%, transparent);
+  background: Field;
+  color: FieldText;
+}
+
+.status {
+  min-height: 1.25rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: color-mix(in oklab, CanvasText 75%, transparent);
+}
+
+.table-wrap {
+  overflow: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, CanvasText 14%, transparent);
+}
+
+.speed-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.speed-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: left;
+  padding: 0.55rem 0.65rem;
+  background: color-mix(in oklab, Canvas 92%, CanvasText 8%);
+  border-bottom: 1px solid color-mix(in oklab, CanvasText 16%, transparent);
+  white-space: nowrap;
+}
+
+.speed-table tbody tr:nth-child(even) {
+  background: color-mix(in oklab, CanvasText 4%, transparent);
+}
+
+.speed-table td {
+  padding: 0.45rem 0.65rem;
+  vertical-align: top;
+  border-bottom: 1px solid color-mix(in oklab, CanvasText 8%, transparent);
+}
+
+.speed-table td.num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  width: 1%;
+}
+
+.speed-table td.range {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.speed-table td.names {
+  white-space: normal;
+  word-break: break-word;
+  min-width: 12rem;
+}
+
+.footer-meta {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+
+.footer-meta .warn {
+  color: color-mix(in oklab, orange 55%, CanvasText);
+}
