@@ -3,7 +3,7 @@ import { Generations, toID } from '@smogon/calc';
 import { applyConditionToRange, championsSpeedRange, type ChampionsSpeedRange, type SpeedCondition } from './speed';
 import './style.css';
 
-const SETDEX_URL = `${import.meta.env.BASE_URL}setdex_pikalytics_champions_v11.js`;
+const SETDEX_URL = `${import.meta.env.BASE_URL}setdex_pikalytics_champions_v12.js`;
 const GEN9 = Generations.get(9);
 const SPECIES_ALIASES: Record<string, string> = {
   Aegislash: 'Aegislash-Blade',
